@@ -19,12 +19,12 @@ import javax.swing.Timer;
 public class Panel extends JPanel implements ActionListener, KeyListener{
 	// class members
 	int TILE_SIZE = Settings.TILE_SIZE;
+	
 	Dimension resolution;
 	Rect rect;
 	Timer loop;
 	
 	ArrayList<SnakeBodyRect> snake;
-	
 	enum Direction{ UP,DOWN,LEFT,RIGHT,NONE }
 	Direction current_direction = Direction.NONE;
 
@@ -44,7 +44,7 @@ public class Panel extends JPanel implements ActionListener, KeyListener{
 		this.rect = new Rect(100,100,this.TILE_SIZE - 1,this.TILE_SIZE - 1,Color.DARK_GRAY);
 		
 		// initializes a new thread on this class, to update and render graphics
-		this.loop = new Timer(100, this);
+		this.loop = new Timer(60, this);
 		this.loop.start();
 		
 		// creating the snake
@@ -58,13 +58,18 @@ public class Panel extends JPanel implements ActionListener, KeyListener{
 		this.addKeyListener(this);
 		this.setFocusable(true);
 		
-		// creating the food, the do while loop, prevents the food from going out of bounds
+		// creating the food
 		this.random = new Random();
 		this.shuffleFoodPosition();
 		this.food = new Rect(this.random_x, this.random_y, this.TILE_SIZE, this.TILE_SIZE, Color.red);
 		
 	}
 	
+	public void shuffleFoodPosition() {
+		this.random_x = this.random.nextInt(Settings.ROWS) * this.TILE_SIZE;
+		this.random_y = this.random.nextInt(Settings.COLUMNS) * this.TILE_SIZE;
+		
+	}
 	
 	// renders the main grid, using the rectangle shape object,
 	// you don't need to call this method, but it helps visualizing
@@ -144,11 +149,7 @@ public class Panel extends JPanel implements ActionListener, KeyListener{
 		}
 	}
 	
-	public void shuffleFoodPosition() {
-		this.random_x = this.random.nextInt(Settings.ROWS) * this.TILE_SIZE;
-		this.random_y = this.random.nextInt(Settings.COLUMNS) * this.TILE_SIZE;
-		
-	}
+
 	
 	// check if the snake collides with itself, or if it goes out of bounds, game over
 	public void checkGameOver(){
@@ -169,7 +170,7 @@ public class Panel extends JPanel implements ActionListener, KeyListener{
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		this.renderGrid(g);
+		//this.renderGrid(g);
 		this.food.draw(g);
 		this.renderSnake(g);
 	}
@@ -179,7 +180,6 @@ public class Panel extends JPanel implements ActionListener, KeyListener{
 	public void actionPerformed(ActionEvent e) {
         // this line below fixes linux mouse lag hover window
 		Toolkit.getDefaultToolkit().sync();
-		System.out.println("food X: "+ this.food.x_pos+" - food Y: "+ this.food.y_pos);
 		this.checkFoodCollision();
 		this.updateSnake();
 		this.checkGameOver();
