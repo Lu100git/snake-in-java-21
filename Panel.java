@@ -133,6 +133,8 @@ public class Panel extends JPanel implements ActionListener, KeyListener{
 	}
 	
 	// this method checks if the head of the snake collided with the food, if it does, append a new head to the snake array
+	// I used the coordinate before the last element  in the list, this will prevent game over glitches
+	// when it appends the new head into the body
 	public void checkFoodCollision() {
 		if (this.snake.getLast().x_pos == this.food.x_pos && this.snake.getLast().y_pos == this.food.y_pos) {
 			this.shuffleFoodPosition();
